@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator Link Undangan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+  /* Palet warna brand MIG Digital Printing: dark mode + aksen ungu #7B29BA */
+  :root {
+    --hijau-tua: #121212;
+    --hijau: #121212;
+    --cream: #f5f5f7;
+    --cream-redup: rgba(245, 245, 247, 0.55);
+    --emas: #7b29ba;
+    --garis: rgba(245, 245, 247, 0.14);
+    --hitam: #092328;
+    --hijau-sukses: #22c55e;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--hijau-tua);
+    color: var(--cream);
+    font-family: 'Sora', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 56px 20px 80px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  h1 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    margin: 0 0 4px;
+  }
+
+  .subjudul {
+    color: var(--cream-redup);
+    font-size: 14px;
+    margin: 0 0 36px;
+    line-height: 1.5;
+  }
+
+  label {
+    display: block;
+    font-size: 12.5px;
+    color: var(--cream-redup);
+    margin: 0 0 6px;
+  }
+
+  .field { margin-bottom: 18px; }
+
+  .pengaturan {
+    margin-bottom: 24px;
+    border: 1px solid var(--garis);
+    border-radius: 10px;
+    padding: 4px 14px;
+  }
+
+  .pengaturan[open] { padding-bottom: 14px; }
+
+  .pengaturan summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px 0;
+    font-size: 13px;
+    color: var(--cream-redup);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pengaturan summary::-webkit-details-marker { display: none; }
+
+  .pengaturan summary::before {
+    content: '▸';
+    color: var(--emas);
+    transition: transform 0.15s ease;
+  }
+
+  .pengaturan[open] summary::before { transform: rotate(90deg); }
+
+  .pengaturan .field:first-of-type { margin-top: 6px; }
+  .pengaturan .field:last-child { margin-bottom: 0; }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    padding: 11px 13px;
+    color: var(--cream);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--emas);
+  }
+
+  input[type="text"]::placeholder, textarea::placeholder {
+    color: var(--cream-redup);
+    opacity: 1;
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .catatan {
+    font-size: 12px;
+    color: var(--cream-redup);
+    margin-top: 6px;
+  }
+
+  button.utama {
+    width: 100%;
+    background: #ffffff;
+    color: var(--hitam);
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: transform 0.08s ease, filter 0.15s ease;
+  }
+
+  button.utama:hover { filter: brightness(1.06); }
+  button.utama:active { transform: scale(0.97); filter: brightness(0.92); }
+
+  section.hasil {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--garis);
+    display: none;
+  }
+
+  section.hasil.tampil { display: block; }
+
+  .baris-hasil {
+    margin-bottom: 20px;
+  }
+
+  .baris-hasil .label-hasil {
+    font-size: 12.5px;
+    color: var(--cream-redup);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .kanan-hasil {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tombol-salin {
+    background: none;
+    border: 1px solid var(--garis);
+    color: var(--cream);
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .tombol-salin:hover { border-color: var(--emas); }
+
+  .kotak-hasil {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    padding: 12px 13px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  a.kotak-hasil { display: block; color: var(--cream); text-decoration: none; }
+
+  .tombol-wa {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #e6e6e6;
+    color: var(--hitam);
+    border-radius: 8px;
+    padding: 13px;
+    font-size: 14.5px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .riwayat {
+    margin-top: 32px;
+  }
+
+  .riwayat h2 {
+    font-size: 12.5px;
+    text-transform: none;
+    color: var(--cream-redup);
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+
+  .item-riwayat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-top: 1px solid var(--garis);
+    font-size: 13.5px;
+    gap: 10px;
+  }
+
+  .item-riwayat .nama { font-weight: 500; }
+
+  .kanan-riwayat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .status-salin {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11.5px;
+    color: var(--hijau-sukses);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .status-salin svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  .status-salin.tampil { opacity: 1; }
+
+  .tombol-riwayat {
+    background: #ffffff;
+    color: var(--hitam);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.08s ease, filter 0.15s ease;
+  }
+
+  .tombol-riwayat:hover { filter: brightness(0.94); }
+  .tombol-riwayat:active { transform: scale(0.94); filter: brightness(0.88); }
+
+  .kosong {
+    font-size: 13px;
+    color: var(--cream-redup);
+    font-style: italic;
+  }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--garis);
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--cream-redup);
+  }
+
+  footer a {
+    color: var(--cream-redup);
+    text-decoration: underline;
+    font-size: 10.5px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Generator Link Undangan</h1>
+  <p class="subjudul">Masukin nama tamu, link undangan dan teks WA-nya langsung jadi — tinggal share.</p>
+
+  <details class="pengaturan" id="pengaturan">
+    <summary>Pengaturan (nama catin, link, template pesan)</summary>
+
+    <div class="field">
+      <label for="catin">Nama catin</label>
+      <input type="text" id="catin" placeholder="Contoh: Raka & Naya" enterkeyhint="done">
+    </div>
+
+    <div class="field">
+      <label for="baseUrl">Link dasar undangan</label>
+      <input type="text" id="baseUrl" placeholder="Contoh: https://namaklien.framer.app" enterkeyhint="done">
+    </div>
+
+    <div class="field">
+      <label for="template">Template pesan WA</label>
+      <textarea id="template" rows="9">Assalamu'alaikum Wr. Wb.
+
+Kepada Yth,
+*{nama}*
+
+Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami, *{catin}*.
+
+Berikut link undangan lengkap beserta info acaranya:
+{link}
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
+Wassalamu'alaikum Wr. Wb.</textarea>
+      <div class="catatan">{nama}, {catin}, dan {link} otomatis diganti sesuai isian di atas.</div>
+    </div>
+  </details>
+
+  <div class="field">
+    <label for="nama">Nama tamu</label>
+    <input type="text" id="nama" placeholder="Contoh: Mig Digital Printing" enterkeyhint="done">
+  </div>
+
+  <button class="utama" onclick="generate()">Buat Link &amp; Pesan</button>
+
+  <section class="hasil" id="hasil">
+    <div class="baris-hasil">
+      <div class="label-hasil">
+        <span>Pesan WA</span>
+        <span class="kanan-hasil">
+          <span class="status-salin" id="statusSalinPesan"></span>
+          <button class="tombol-salin" onclick="salinPesan()">Salin</button>
+        </span>
+      </div>
+      <div class="kotak-hasil" id="pesanHasil"></div>
+    </div>
+
+    <a class="tombol-wa" id="tombolWa" target="_blank" rel="noopener">Buka di WhatsApp</a>
+  </section>
+
+  <div class="riwayat">
+    <h2>Riwayat sesi ini</h2>
+    <div id="daftarRiwayat"><p class="kosong">Belum ada yang dibuat.</p></div>
+  </div>
+
+  <footer>
+    Dibuat oleh MIG Digital Printing
+    <br>
+    <a href="#" id="tautanUbahPengaturan" onclick="tampilkanPengaturan(event)">Ubah pengaturan</a>
+  </footer>
+</main>
+
+<script>
+  const KUNCI_RIWAYAT = 'riwayat_tamu_undangan';
+  const KUNCI_PENGATURAN = 'pengaturan_undangan';
+  const ICON_CEKLIS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  let riwayat = muatRiwayat();
+  renderRiwayat();
+  muatPengaturan();
+
+  function muatRiwayat() {
+    try {
+      const tersimpan = localStorage.getItem(KUNCI_RIWAYAT);
+      return tersimpan ? JSON.parse(tersimpan) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function simpanRiwayat() {
+    try {
+      localStorage.setItem(KUNCI_RIWAYAT, JSON.stringify(riwayat));
+    } catch (e) {
+      // kalau localStorage gak bisa diakses (mis. preview di dalam iframe),
+      // riwayat tetap jalan normal, cuma gak tersimpan permanen
+    }
+  }
+
+  function muatPengaturan() {
+    const panel = document.getElementById('pengaturan');
+    try {
+      const tersimpan = localStorage.getItem(KUNCI_PENGATURAN);
+      if (!tersimpan) {
+        panel.open = true; // belum pernah diisi, tampilkan & buka otomatis
+        panel.style.display = '';
+        return;
+      }
+      const data = JSON.parse(tersimpan);
+      if (data.catin) document.getElementById('catin').value = data.catin;
+      if (data.baseUrl) document.getElementById('baseUrl').value = data.baseUrl;
+      panel.open = false;
+      panel.style.display = 'none'; // udah pernah diisi, sembunyikan total
+    } catch (e) {
+      panel.style.display = '';
+      panel.open = true;
+    }
+  }
+
+  function tampilkanPengaturan(e) {
+    e.preventDefault();
+    const panel = document.getElementById('pengaturan');
+    panel.style.display = '';
+    panel.open = true;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function simpanPengaturan(catin, baseUrl) {
+    try {
+      localStorage.setItem(KUNCI_PENGATURAN, JSON.stringify({ catin, baseUrl }));
+    } catch (e) {
+      // gak masalah, cuma gak tersimpan buat sesi berikutnya
+    }
+    const panel = document.getElementById('pengaturan');
+    panel.open = false;
+    panel.style.display = 'none';
+  }
+
+  function generate() {
+    const nama = document.getElementById('nama').value.trim();
+    const catin = document.getElementById('catin').value.trim();
+    const baseUrlMentah = document.getElementById('baseUrl').value.trim();
+    const template = document.getElementById('template').value;
+
+    if (!nama) {
+      document.getElementById('nama').focus();
+      return;
+    }
+    if (!catin) {
+      document.getElementById('catin').focus();
+      return;
+    }
+    if (!baseUrlMentah) {
+      document.getElementById('baseUrl').focus();
+      return;
+    }
+
+    const baseUrl = baseUrlMentah.replace(/\/+$/, '');
+    const link = `${baseUrl}/?to=${encodeURIComponent(nama)}`;
+    const pesan = template.replaceAll('{nama}', nama).replaceAll('{catin}', catin).replaceAll('{link}', link);
+
+    document.getElementById('pesanHasil').textContent = pesan;
+    document.getElementById('tombolWa').href = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+    document.getElementById('hasil').classList.add('tampil');
+
+    simpanPengaturan(catin, baseUrlMentah);
+    riwayat.unshift({ nama, link });
+    simpanRiwayat();
+    renderRiwayat();
+  }
+
+  function renderRiwayat() {
+    const wadah = document.getElementById('daftarRiwayat');
+    if (riwayat.length === 0) {
+      wadah.innerHTML = '<p class="kosong">Belum ada yang dibuat.</p>';
+      return;
+    }
+    wadah.innerHTML = riwayat.map((item, i) => `
+      <div class="item-riwayat">
+        <span class="nama">${escapeHtml(item.nama)}</span>
+        <span class="kanan-riwayat">
+          <span class="status-salin" id="status-riwayat-${i}">${ICON_CEKLIS}Tersalin</span>
+          <button class="tombol-riwayat" onclick="salinRiwayat(${i})">Salin link</button>
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function salinRiwayat(index) {
+    const item = riwayat[index];
+    if (!item) return;
+    navigator.clipboard.writeText(item.link);
+    tampilkanStatusSalin(`status-riwayat-${index}`);
+  }
+
+  function salinPesan() {
+    const teks = document.getElementById('pesanHasil').textContent;
+    navigator.clipboard.writeText(teks);
+    tampilkanStatusSalin('statusSalinPesan');
+  }
+
+  function tampilkanStatusSalin(id) {
+    const status = document.getElementById(id);
+    if (!status) return;
+    status.innerHTML = `${ICON_CEKLIS}Tersalin`;
+    status.classList.add('tampil');
+    clearTimeout(status._timeoutSalin);
+    status._timeoutSalin = setTimeout(() => status.classList.remove('tampil'), 1500);
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById('catin').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.target.blur(); }
+  });
+
+  document.getElementById('baseUrl').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.target.blur(); }
+  });
+
+  document.getElementById('nama').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.target.blur(); generate(); }
+  });
+</script>
+</body>
+</html>
