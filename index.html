@@ -17,6 +17,7 @@
     --garis: rgba(245, 245, 247, 0.14);
     --hitam: #092328;
     --hijau-sukses: #22c55e;
+    --merah: #f87171;
   }
 
   * { box-sizing: border-box; }
@@ -47,7 +48,7 @@
   .subjudul {
     color: var(--cream-redup);
     font-size: 14px;
-    margin: 0 0 36px;
+    margin: 0 0 32px;
     line-height: 1.5;
   }
 
@@ -60,38 +61,41 @@
 
   .field { margin-bottom: 18px; }
 
-  .pengaturan {
-    margin-bottom: 24px;
-    border: 1px solid var(--garis);
-    border-radius: 10px;
-    padding: 4px 14px;
+  .field.ada-error input,
+  .field.ada-error textarea {
+    border-color: var(--merah);
   }
 
-  .pengaturan[open] { padding-bottom: 14px; }
+  .pesan-error {
+    display: none;
+    color: var(--merah);
+    font-size: 12px;
+    margin-top: 6px;
+  }
 
-  .pengaturan summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 12px 0;
-    font-size: 13px;
-    color: var(--cream-redup);
+  .pesan-error.tampil { display: block; }
+
+  .baris-label-aksi {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    margin-bottom: 6px;
   }
 
-  .pengaturan summary::-webkit-details-marker { display: none; }
+  .baris-label-aksi label { margin: 0; }
 
-  .pengaturan summary::before {
-    content: '▸';
-    color: var(--emas);
-    transition: transform 0.15s ease;
+  .tautan-kecil {
+    background: none;
+    border: none;
+    color: var(--cream);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    opacity: 0.85;
   }
 
-  .pengaturan[open] summary::before { transform: rotate(90deg); }
-
-  .pengaturan .field:first-of-type { margin-top: 6px; }
-  .pengaturan .field:last-child { margin-bottom: 0; }
+  .tautan-kecil:hover { opacity: 1; }
 
   input[type="text"], textarea {
     width: 100%;
@@ -193,8 +197,6 @@
     word-break: break-word;
   }
 
-  a.kotak-hasil { display: block; color: var(--cream); text-decoration: none; }
-
   .tombol-wa {
     display: block;
     text-align: center;
@@ -208,16 +210,14 @@
     margin-top: 4px;
   }
 
-  .riwayat {
-    margin-top: 32px;
-  }
+  .riwayat { margin-top: 32px; }
 
   .riwayat h2 {
     font-size: 12.5px;
     text-transform: none;
     color: var(--cream-redup);
     font-weight: 500;
-    margin: 0 0 12px;
+    margin: 0;
   }
 
   .item-riwayat {
@@ -278,6 +278,47 @@
     font-style: italic;
   }
 
+  /* Daftar catin tersimpan (mode admin) */
+  .daftar-catin { margin-top: 36px; }
+
+  .kartu-catin {
+    padding: 16px 0;
+    border-top: 1px solid var(--garis);
+  }
+
+  .kartu-catin:first-child { padding-top: 0; }
+
+  .nama-catin {
+    font-weight: 600;
+    font-size: 14.5px;
+    margin-bottom: 3px;
+  }
+
+  .baseurl-catin {
+    font-size: 12px;
+    color: var(--cream-redup);
+    margin-bottom: 10px;
+    word-break: break-all;
+  }
+
+  .link-catin {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    word-break: break-all;
+    margin-bottom: 10px;
+  }
+
+  .aksi-catin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   footer {
     margin-top: 40px;
     padding-top: 18px;
@@ -286,34 +327,32 @@
     font-size: 11.5px;
     color: var(--cream-redup);
   }
-
-  footer a {
-    color: var(--cream-redup);
-    text-decoration: underline;
-    font-size: 10.5px;
-  }
 </style>
 </head>
 <body>
 <main>
-  <h1>Generator Link Undangan</h1>
-  <p class="subjudul">Masukin nama tamu, link undangan dan teks WA-nya langsung jadi — tinggal share.</p>
+  <h1 id="judulHalaman">Kelola Link Catin</h1>
+  <p class="subjudul" id="subjudulHalaman">Simpan pengaturan tiap pasangan catin di sini, lalu bagikan link generator-nya ke masing-masing catin.</p>
 
-  <details class="pengaturan" id="pengaturan">
-    <summary>Pengaturan (nama catin, link, template pesan)</summary>
-
-    <div class="field">
+  <!-- MODE ADMIN: cuma buat kamu, buat kelola daftar catin -->
+  <div id="modeAdmin">
+    <div class="field" id="fieldCatin">
       <label for="catin">Nama catin</label>
       <input type="text" id="catin" placeholder="Contoh: Raka & Naya" enterkeyhint="done">
+      <div class="pesan-error" id="errorCatin">Nama catin belum diisi.</div>
     </div>
 
-    <div class="field">
+    <div class="field" id="fieldBaseUrl">
       <label for="baseUrl">Link dasar undangan</label>
       <input type="text" id="baseUrl" placeholder="Contoh: https://namaklien.framer.app" enterkeyhint="done">
+      <div class="pesan-error" id="errorBaseUrl">Link dasar belum diisi.</div>
     </div>
 
     <div class="field">
-      <label for="template">Template pesan WA</label>
+      <div class="baris-label-aksi">
+        <label for="template">Template pesan WA</label>
+        <button type="button" class="tautan-kecil" onclick="resetTemplateField()">Reset ke default</button>
+      </div>
       <textarea id="template" rows="14">Yth.
 Bapak/Ibu/Saudara/i
 *{nama}*
@@ -331,51 +370,244 @@ Terima kasih kami sampaikan.
 
 Wassalamualaikum Wr. Wb
 *{catin}*</textarea>
-      <div class="catatan">{nama}, {catin}, dan {link} otomatis diganti sesuai isian di atas.</div>
+      <div class="catatan">{nama}, {catin}, dan {link} otomatis diganti pas catin generate link tamunya.</div>
     </div>
-  </details>
 
-  <div class="field">
-    <label for="nama">Nama tamu</label>
-    <input type="text" id="nama" placeholder="Contoh: Mig Digital Printing" enterkeyhint="done">
+    <button class="utama" id="tombolSimpanCatin" onclick="simpanCatin()">Simpan catin</button>
+    <button type="button" class="tautan-kecil" id="tombolBatalEdit" onclick="resetForm()" style="display:none; margin-top:12px;">Batal edit</button>
+
+    <div class="daftar-catin">
+      <h2 style="margin-bottom:14px;">Daftar catin</h2>
+      <div id="daftarCatinList"><p class="kosong">Belum ada catin tersimpan.</p></div>
+    </div>
   </div>
 
-  <button class="utama" onclick="generate()">Buat Link &amp; Pesan</button>
+  <!-- MODE CATIN: yang ini dibuka lewat link yang di-share, gak ada pengaturan sama sekali -->
+  <div id="modeCatin" style="display:none;">
+    <div class="field" id="fieldNama">
+      <label for="nama">Nama tamu</label>
+      <input type="text" id="nama" placeholder="Contoh: Mig Digital Printing" enterkeyhint="done">
+      <div class="pesan-error" id="errorNama">Nama tamu belum diisi.</div>
+    </div>
 
-  <section class="hasil" id="hasil">
-    <div class="baris-hasil">
-      <div class="label-hasil">
-        <span>Pesan WA</span>
-        <span class="kanan-hasil">
-          <span class="status-salin" id="statusSalinPesan"></span>
-          <button class="tombol-salin" onclick="salinPesan()">Salin</button>
-        </span>
+    <button class="utama" onclick="generate()">Buat Link &amp; Pesan</button>
+
+    <section class="hasil" id="hasil">
+      <div class="baris-hasil">
+        <div class="label-hasil">
+          <span>Pesan WA</span>
+          <span class="kanan-hasil">
+            <span class="status-salin" id="statusSalinPesan"></span>
+            <button class="tombol-salin" onclick="salinPesan()">Salin</button>
+          </span>
+        </div>
+        <div class="kotak-hasil" id="pesanHasil"></div>
       </div>
-      <div class="kotak-hasil" id="pesanHasil"></div>
+
+      <a class="tombol-wa" id="tombolWa" target="_blank" rel="noopener">Buka di WhatsApp</a>
+    </section>
+
+    <div class="riwayat">
+      <div class="baris-label-aksi">
+        <h2>Riwayat sesi ini</h2>
+        <button type="button" class="tautan-kecil" id="tombolHapusRiwayat" onclick="hapusRiwayat()" style="display:none;">Hapus semua</button>
+      </div>
+      <div id="daftarRiwayat"><p class="kosong">Belum ada yang dibuat.</p></div>
     </div>
-
-    <a class="tombol-wa" id="tombolWa" target="_blank" rel="noopener">Buka di WhatsApp</a>
-  </section>
-
-  <div class="riwayat">
-    <h2>Riwayat sesi ini</h2>
-    <div id="daftarRiwayat"><p class="kosong">Belum ada yang dibuat.</p></div>
   </div>
 
-  <footer>
-    Dibuat oleh MIG Digital Printing
-    <br>
-    <a href="#" id="tautanUbahPengaturan" onclick="tampilkanPengaturan(event)">Ubah pengaturan</a>
-  </footer>
+  <footer>Dibuat oleh MIG Digital Printing</footer>
 </main>
 
 <script>
   const KUNCI_RIWAYAT = 'riwayat_tamu_undangan';
-  const KUNCI_PENGATURAN = 'pengaturan_undangan';
+  const KUNCI_DAFTAR_CATIN = 'daftar_catin_admin';
   const ICON_CEKLIS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  const TEMPLATE_DEFAULT = document.getElementById('template').value;
+
   let riwayat = muatRiwayat();
-  renderRiwayat();
-  muatPengaturan();
+  let daftarCatin = muatDaftarCatin();
+  let editingId = null;
+  let PENGATURAN_CATIN = null;
+
+  inisialisasi();
+
+  function inisialisasi() {
+    const params = new URLSearchParams(window.location.search);
+    const catinUrl = params.get('catin');
+    const baseUrlUrl = params.get('baseUrl');
+    const templateUrl = params.get('template');
+
+    if (catinUrl && baseUrlUrl) {
+      // ==== MODE CATIN — dibuka lewat link yang dibagikan admin ====
+      PENGATURAN_CATIN = {
+        catin: catinUrl,
+        baseUrl: baseUrlUrl,
+        template: templateUrl || TEMPLATE_DEFAULT
+      };
+      document.getElementById('modeAdmin').style.display = 'none';
+      document.getElementById('modeCatin').style.display = '';
+      document.getElementById('judulHalaman').textContent = 'Link Undangan ' + catinUrl;
+      document.getElementById('subjudulHalaman').textContent = 'Masukin nama tamu, link undangan dan teks WA-nya langsung jadi — tinggal share.';
+      document.title = 'Undangan ' + catinUrl;
+      renderRiwayat();
+    } else {
+      // ==== MODE ADMIN — buat kamu kelola daftar catin ====
+      renderDaftarCatin();
+    }
+  }
+
+  // ---------- Data: daftar catin (mode admin) ----------
+  function muatDaftarCatin() {
+    try {
+      const tersimpan = localStorage.getItem(KUNCI_DAFTAR_CATIN);
+      return tersimpan ? JSON.parse(tersimpan) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function simpanDaftarCatin() {
+    try {
+      localStorage.setItem(KUNCI_DAFTAR_CATIN, JSON.stringify(daftarCatin));
+    } catch (e) {
+      // gak masalah, cuma gak tersimpan permanen
+    }
+  }
+
+  function buatId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function buatLinkDariEntry(entry) {
+    const params = new URLSearchParams();
+    params.set('catin', entry.catin);
+    params.set('baseUrl', entry.baseUrl);
+    params.set('template', entry.template || TEMPLATE_DEFAULT);
+    return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+  }
+
+  function resetTemplateField() {
+    document.getElementById('template').value = TEMPLATE_DEFAULT;
+  }
+
+  function resetForm() {
+    editingId = null;
+    document.getElementById('catin').value = '';
+    document.getElementById('baseUrl').value = '';
+    document.getElementById('template').value = TEMPLATE_DEFAULT;
+    document.getElementById('tombolSimpanCatin').textContent = 'Simpan catin';
+    document.getElementById('tombolBatalEdit').style.display = 'none';
+    tampilkanError('fieldCatin', 'errorCatin', false);
+    tampilkanError('fieldBaseUrl', 'errorBaseUrl', false);
+  }
+
+  function simpanCatin() {
+    const catin = document.getElementById('catin').value.trim();
+    const baseUrlMentah = document.getElementById('baseUrl').value.trim();
+    const template = document.getElementById('template').value;
+
+    const catinKosong = !catin;
+    const baseUrlKosong = !baseUrlMentah;
+    tampilkanError('fieldCatin', 'errorCatin', catinKosong);
+    tampilkanError('fieldBaseUrl', 'errorBaseUrl', baseUrlKosong);
+
+    if (catinKosong || baseUrlKosong) {
+      document.getElementById(catinKosong ? 'catin' : 'baseUrl').focus();
+      return;
+    }
+
+    const baseUrl = normalisasiUrl(baseUrlMentah);
+
+    if (editingId) {
+      const idx = daftarCatin.findIndex((e) => e.id === editingId);
+      if (idx !== -1) {
+        daftarCatin[idx] = { ...daftarCatin[idx], catin, baseUrl, template };
+      }
+    } else {
+      daftarCatin.unshift({ id: buatId(), catin, baseUrl, template });
+    }
+
+    simpanDaftarCatin();
+    renderDaftarCatin();
+    resetForm();
+  }
+
+  function editCatin(id) {
+    const entry = daftarCatin.find((e) => e.id === id);
+    if (!entry) return;
+    editingId = id;
+    document.getElementById('catin').value = entry.catin;
+    document.getElementById('baseUrl').value = entry.baseUrl;
+    document.getElementById('template').value = entry.template || TEMPLATE_DEFAULT;
+    document.getElementById('tombolSimpanCatin').textContent = 'Update catin';
+    document.getElementById('tombolBatalEdit').style.display = '';
+    tampilkanError('fieldCatin', 'errorCatin', false);
+    tampilkanError('fieldBaseUrl', 'errorBaseUrl', false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function hapusCatin(id) {
+    if (!window.confirm('Hapus catin ini dari daftar?')) return;
+    daftarCatin = daftarCatin.filter((e) => e.id !== id);
+    simpanDaftarCatin();
+    renderDaftarCatin();
+    if (editingId === id) resetForm();
+  }
+
+  function salinLinkCatin(id) {
+    const entry = daftarCatin.find((e) => e.id === id);
+    if (!entry) return;
+    navigator.clipboard.writeText(buatLinkDariEntry(entry));
+    tampilkanStatusSalin(`status-catin-${id}`);
+  }
+
+  function renderDaftarCatin() {
+    const wadah = document.getElementById('daftarCatinList');
+    if (daftarCatin.length === 0) {
+      wadah.innerHTML = '<p class="kosong">Belum ada catin tersimpan.</p>';
+      return;
+    }
+    wadah.innerHTML = daftarCatin.map((entry) => `
+      <div class="kartu-catin">
+        <div class="nama-catin">${escapeHtml(entry.catin)}</div>
+        <div class="baseurl-catin">${escapeHtml(entry.baseUrl)}</div>
+        <div class="link-catin">${escapeHtml(buatLinkDariEntry(entry))}</div>
+        <div class="aksi-catin">
+          <button class="tombol-riwayat" onclick="salinLinkCatin('${entry.id}')">Salin link</button>
+          <span class="status-salin" id="status-catin-${entry.id}">${ICON_CEKLIS}Tersalin</span>
+          <button class="tombol-salin" onclick="editCatin('${entry.id}')">Edit</button>
+          <button class="tombol-salin" onclick="hapusCatin('${entry.id}')">Hapus</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ---------- Mode catin: generate link & pesan tamu ----------
+  function generate() {
+    const nama = document.getElementById('nama').value.trim();
+    const namaKosong = !nama;
+    tampilkanError('fieldNama', 'errorNama', namaKosong);
+    if (namaKosong) {
+      document.getElementById('nama').focus();
+      return;
+    }
+
+    const catin = PENGATURAN_CATIN.catin;
+    const baseUrl = normalisasiUrl(PENGATURAN_CATIN.baseUrl);
+    const template = PENGATURAN_CATIN.template;
+
+    const link = `${baseUrl}/?to=${encodeURIComponent(nama)}`;
+    const pesan = template.replaceAll('{nama}', nama).replaceAll('{catin}', catin).replaceAll('{link}', link);
+
+    document.getElementById('pesanHasil').textContent = pesan;
+    document.getElementById('tombolWa').href = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+    document.getElementById('hasil').classList.add('tampil');
+
+    riwayat.unshift({ nama, link, pesan });
+    simpanRiwayat();
+    renderRiwayat();
+  }
 
   function muatRiwayat() {
     try {
@@ -390,89 +622,27 @@ Wassalamualaikum Wr. Wb
     try {
       localStorage.setItem(KUNCI_RIWAYAT, JSON.stringify(riwayat));
     } catch (e) {
-      // kalau localStorage gak bisa diakses (mis. preview di dalam iframe),
-      // riwayat tetap jalan normal, cuma gak tersimpan permanen
+      // gak masalah, cuma gak tersimpan permanen
     }
   }
 
-  function muatPengaturan() {
-    const panel = document.getElementById('pengaturan');
-    try {
-      const tersimpan = localStorage.getItem(KUNCI_PENGATURAN);
-      if (!tersimpan) {
-        panel.open = true; // belum pernah diisi, tampilkan & buka otomatis
-        panel.style.display = '';
-        return;
-      }
-      const data = JSON.parse(tersimpan);
-      if (data.catin) document.getElementById('catin').value = data.catin;
-      if (data.baseUrl) document.getElementById('baseUrl').value = data.baseUrl;
-      panel.open = false;
-      panel.style.display = 'none'; // udah pernah diisi, sembunyikan total
-    } catch (e) {
-      panel.style.display = '';
-      panel.open = true;
-    }
-  }
-
-  function tampilkanPengaturan(e) {
-    e.preventDefault();
-    const panel = document.getElementById('pengaturan');
-    panel.style.display = '';
-    panel.open = true;
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function simpanPengaturan(catin, baseUrl) {
-    try {
-      localStorage.setItem(KUNCI_PENGATURAN, JSON.stringify({ catin, baseUrl }));
-    } catch (e) {
-      // gak masalah, cuma gak tersimpan buat sesi berikutnya
-    }
-    const panel = document.getElementById('pengaturan');
-    panel.open = false;
-    panel.style.display = 'none';
-  }
-
-  function generate() {
-    const nama = document.getElementById('nama').value.trim();
-    const catin = document.getElementById('catin').value.trim();
-    const baseUrlMentah = document.getElementById('baseUrl').value.trim();
-    const template = document.getElementById('template').value;
-
-    if (!nama) {
-      document.getElementById('nama').focus();
-      return;
-    }
-    if (!catin) {
-      document.getElementById('catin').focus();
-      return;
-    }
-    if (!baseUrlMentah) {
-      document.getElementById('baseUrl').focus();
-      return;
-    }
-
-    const baseUrl = baseUrlMentah.replace(/\/+$/, '');
-    const link = `${baseUrl}/?to=${encodeURIComponent(nama)}`;
-    const pesan = template.replaceAll('{nama}', nama).replaceAll('{catin}', catin).replaceAll('{link}', link);
-
-    document.getElementById('pesanHasil').textContent = pesan;
-    document.getElementById('tombolWa').href = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
-    document.getElementById('hasil').classList.add('tampil');
-
-    simpanPengaturan(catin, baseUrlMentah);
-    riwayat.unshift({ nama, link, pesan });
+  function hapusRiwayat() {
+    if (riwayat.length === 0) return;
+    if (!window.confirm('Hapus semua riwayat di sesi ini?')) return;
+    riwayat = [];
     simpanRiwayat();
     renderRiwayat();
   }
 
   function renderRiwayat() {
     const wadah = document.getElementById('daftarRiwayat');
+    const tombolHapus = document.getElementById('tombolHapusRiwayat');
     if (riwayat.length === 0) {
       wadah.innerHTML = '<p class="kosong">Belum ada yang dibuat.</p>';
+      if (tombolHapus) tombolHapus.style.display = 'none';
       return;
     }
+    if (tombolHapus) tombolHapus.style.display = '';
     wadah.innerHTML = riwayat.map((item, i) => `
       <div class="item-riwayat">
         <span class="nama">${escapeHtml(item.nama)}</span>
@@ -495,6 +665,23 @@ Wassalamualaikum Wr. Wb
     const teks = document.getElementById('pesanHasil').textContent;
     navigator.clipboard.writeText(teks);
     tampilkanStatusSalin('statusSalinPesan');
+  }
+
+  // ---------- Util bareng ----------
+  function normalisasiUrl(url) {
+    let hasil = url.trim().replace(/\/+$/, '');
+    if (hasil && !/^https?:\/\//i.test(hasil)) {
+      hasil = 'https://' + hasil;
+    }
+    return hasil;
+  }
+
+  function tampilkanError(idField, idError, adaError) {
+    const field = document.getElementById(idField);
+    const error = document.getElementById(idError);
+    if (!field || !error) return;
+    field.classList.toggle('ada-error', adaError);
+    error.classList.toggle('tampil', adaError);
   }
 
   function tampilkanStatusSalin(id) {
