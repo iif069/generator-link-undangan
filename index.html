@@ -314,19 +314,23 @@
 
     <div class="field">
       <label for="template">Template pesan WA</label>
-      <textarea id="template" rows="9">Assalamu'alaikum Wr. Wb.
-
-Kepada Yth,
+      <textarea id="template" rows="14">Yth.
+Bapak/Ibu/Saudara/i
 *{nama}*
 
-Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami, *{catin}*.
+Assalamualaikum Wr. Wb
 
-Berikut link undangan lengkap beserta info acaranya:
+Dengan memohon Rahmat dan Ridho Allah SWT, dan tanpa mengurangi rasa hormat kami, melalui media sosial ini kami *{catin}* mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir di acara pernikahan kami.
+
+Detail Acara:
 {link}
 
-Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+Merupakan suatu kehormatan dan kebahagiaan jika Bapak/Ibu/Saudara/i bersedia hadir dan turut memberikan doa restu untuk kami.
 
-Wassalamu'alaikum Wr. Wb.</textarea>
+Terima kasih kami sampaikan.
+
+Wassalamualaikum Wr. Wb
+*{catin}*</textarea>
       <div class="catatan">{nama}, {catin}, dan {link} otomatis diganti sesuai isian di atas.</div>
     </div>
   </details>
@@ -458,7 +462,7 @@ Wassalamu'alaikum Wr. Wb.</textarea>
     document.getElementById('hasil').classList.add('tampil');
 
     simpanPengaturan(catin, baseUrlMentah);
-    riwayat.unshift({ nama, link });
+    riwayat.unshift({ nama, link, pesan });
     simpanRiwayat();
     renderRiwayat();
   }
@@ -474,7 +478,7 @@ Wassalamu'alaikum Wr. Wb.</textarea>
         <span class="nama">${escapeHtml(item.nama)}</span>
         <span class="kanan-riwayat">
           <span class="status-salin" id="status-riwayat-${i}">${ICON_CEKLIS}Tersalin</span>
-          <button class="tombol-riwayat" onclick="salinRiwayat(${i})">Salin link</button>
+          <button class="tombol-riwayat" onclick="salinRiwayat(${i})">Salin pesan</button>
         </span>
       </div>
     `).join('');
@@ -483,7 +487,7 @@ Wassalamu'alaikum Wr. Wb.</textarea>
   function salinRiwayat(index) {
     const item = riwayat[index];
     if (!item) return;
-    navigator.clipboard.writeText(item.link);
+    navigator.clipboard.writeText(item.pesan || item.link);
     tampilkanStatusSalin(`status-riwayat-${index}`);
   }
 
